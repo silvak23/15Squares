@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">15Squares</string>
+    <string name="reset_warning">*Board resets on size change*</string>
+    <string name="winner">You Win!</string>
+    <string name="title">15 Squares Puzzle</string>
+    <string name="reset">reset</string>
 </resources>

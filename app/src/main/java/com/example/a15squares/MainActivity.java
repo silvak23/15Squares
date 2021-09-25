@@ -3,8 +3,8 @@ package com.example.a15squares;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 /**
@@ -22,18 +22,16 @@ public class MainActivity extends AppCompatActivity {
 
         //Setting variables from layout
         Button resetButton = findViewById(R.id.resetButton);
-        Button smallerButton = findViewById(R.id.smallerButton);
-        Button largerButton = findViewById(R.id.largerButton);
         TextView titleText = findViewById(R.id.titleTextView);
-        BoardView squaresView = (BoardView) findViewById(R.id.boardView);
+        SeekBar sizeBar = findViewById(R.id.sizeBar);
+        BoardView squaresView = findViewById(R.id.boardView);
 
         //initializing boardController class
         BoardController squaresController = new BoardController(squaresView);
 
         //Setting Listeners
         resetButton.setOnClickListener(squaresController);
-        smallerButton.setOnClickListener(squaresController);
-        largerButton.setOnClickListener(squaresController);
+        sizeBar.setOnSeekBarChangeListener(squaresController);
         squaresView.setOnTouchListener(squaresView);
         titleText.setOnTouchListener(squaresController);
     }

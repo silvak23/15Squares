@@ -3,10 +3,13 @@ package com.example.a15squares;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+
+import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -27,6 +30,7 @@ public class BoardView extends SurfaceView implements View.OnTouchListener{
     Paint correctPaint = new Paint();
     Paint greyPaint = new Paint();
     Paint textPaint = new Paint();
+    Paint warningPaint = new Paint();
 
     //Location Variables
     public static final float gap = 10.0f;
@@ -50,15 +54,17 @@ public class BoardView extends SurfaceView implements View.OnTouchListener{
      * @param context for the super
      * @param attrs for the super
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
 
-        setBackgroundColor(0xFFFFFFFF);
-        whitePaint.setColor(0xFFFFFFFF);
-        correctPaint.setColor(0xFFDCD0FF);
-        greyPaint.setColor(0xFF969696);
-        textPaint.setColor(0xFF000000);
+        setBackgroundColor(context.getColor(R.color.white));
+        whitePaint.setColor(context.getColor(R.color.white));
+        correctPaint.setColor(context.getColor(R.color.purple_200));
+        greyPaint.setColor(context.getColor(R.color.gray));
+        textPaint.setColor(context.getColor(R.color.black));
+        warningPaint.setColor(context.getColor(R.color.red));
 
         boardModel = new BoardModel();
         squareList = new ArrayList<>();
@@ -95,8 +101,8 @@ public class BoardView extends SurfaceView implements View.OnTouchListener{
         reSize();
 
         //SET LOCATIONS
-        xMax = canvas.getWidth();
-        yMax = canvas.getHeight();
+        xMax = getWidth();
+        yMax = getHeight();
         if(xMax < yMax) {
             squareSize = ((xMax -(boardModel.gridSize+6.0f)*gap)/ (boardModel.gridSize*1.0f));
         }
@@ -110,6 +116,11 @@ public class BoardView extends SurfaceView implements View.OnTouchListener{
         //Draws Background Rectangle
         canvas.drawRect(xOff, yOff, xMax - xOff, yMax - yOff, greyPaint);
         where();
+
+        //Writes some warning text
+        warningPaint.setTextSize(20.0f);
+        warningPaint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(getContext().getString(R.string.reset_warning), xMax/2, yMax-20.0f, warningPaint);
 
         //Reset the board
         if(boardModel.reset != 0) {
@@ -153,7 +164,7 @@ public class BoardView extends SurfaceView implements View.OnTouchListener{
         if(correct == boardModel.gridSize*boardModel.gridSize){
             whitePaint.setTextSize(boardModel.textSize*boardModel.gridSize/4);
             whitePaint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText("You Win!", xMax /2, yMax /2+(boardModel.textSize/3), whitePaint);
+            canvas.drawText(getContext().getString(R.string.winner), xMax /2, yMax /2+(boardModel.textSize/3), whitePaint);
         }
         correct = 0;
     }
@@ -231,8 +242,7 @@ public class BoardView extends SurfaceView implements View.OnTouchListener{
     private int randomNumber(){
         Random rand = new Random();
         int upperbound = boardModel.gridSize;
-        int toReturn = rand.nextInt(upperbound);
-        return toReturn;
+        return rand.nextInt(upperbound);
     }
 
     /**
@@ -241,7 +251,7 @@ public class BoardView extends SurfaceView implements View.OnTouchListener{
      *      then swaps it with the empty square
      * @param view that is being touched
      * @param event touch action
-     * @return
+     * @return if touched
      */
     @Override
     public boolean onTouch(View view, MotionEvent event) {
@@ -325,8 +335,8 @@ public class BoardView extends SurfaceView implements View.OnTouchListener{
         //BIGGER
         if(boardModel.reDraw > 0){
             boardModel.gridSize += 1;
-            squareList.add(new ArrayList<Square>());
-            correctList.add(new ArrayList<Integer>());
+            squareList.add(new ArrayList<>());
+            correctList.add(new ArrayList<>());
             for (int q = 0; q < boardModel.gridSize; q++) {
                 squareList.get(prevSize).add(new Square(prevSize, q, whitePaint));
                 squareList.get(q).add(new Square(q, prevSize, whitePaint));

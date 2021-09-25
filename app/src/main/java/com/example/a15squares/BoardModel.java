@@ -16,6 +16,4 @@ public class BoardModel {
     Square empty = new Square(gridSize, gridSize, new Paint());
     int reDraw = 0;
     public float textSize = 0.0f;
-    int smallVis = 0;
-    int bigVis = 0;
 }

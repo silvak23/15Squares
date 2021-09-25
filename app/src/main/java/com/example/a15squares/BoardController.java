@@ -3,6 +3,7 @@ package com.example.a15squares;
 
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.SeekBar;
 
 /**
  * BoardController
@@ -11,7 +12,7 @@ import android.view.View;
  * @author **** Kamalii Silva ****
  * @version **** 24 September 2021 ****
  */
-public class BoardController implements View.OnClickListener, View.OnTouchListener{
+public class BoardController implements View.OnClickListener, View.OnTouchListener, SeekBar.OnSeekBarChangeListener {
 
     //Instance Variables
     private BoardView boardView;
@@ -27,7 +28,7 @@ public class BoardController implements View.OnClickListener, View.OnTouchListen
     }
 
     /**
-     * OnClick method for the buttons in the surface view
+     * OnClick method for the button in the surface view
      * @param view that we will look at
      */
     @Override
@@ -37,40 +38,52 @@ public class BoardController implements View.OnClickListener, View.OnTouchListen
             boardModel.reset = 1;
             boardView.invalidate();
         }
-        //SIZE DOWN BUTTON
-        if(view.getId() == R.id.smallerButton){
-            boardModel.smallVis = View.VISIBLE;
-            if(boardModel.gridSize==4){
-                boardModel.smallVis = View.INVISIBLE;
-            }
-            if(boardModel.gridSize>=4) {
-                boardModel.reDraw = -1;
-                boardModel.reset = 1;
-                boardView.invalidate();
-            }
-            view.setVisibility(boardModel.smallVis);
-        }
-        //SIZE UP BUTTON
-        if(view.getId() == R.id.largerButton){
-            boardModel.smallVis = View.VISIBLE;
-            if(boardModel.gridSize==9){
-                boardModel.bigVis = View.INVISIBLE;
-            }
-            if(boardModel.gridSize < 10) {
-                boardModel.reDraw = 1;
-                boardModel.reset = 1;
-                boardView.invalidate();
-            }
-            view.setVisibility(boardModel.bigVis);
-        }
     }
 
+    /**
+     * OnTouch
+     *      IF YOU TOUCH THE TITLE BAR, IT SOLVES THE PUZZLE FOR YOU
+     */
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN){
             boardModel.reset = -1;
             boardView.invalidate();
+            view.performClick();
+            return true;
         }
         return false;
+    }
+
+    /**
+     * onProgressChanged
+     * @param seekBar which we are using
+     * @param i progress
+     * @param b info that it was changed
+     */
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        //SIZE DOWN BUTTON
+        if(i < boardModel.gridSize){
+            boardModel.reDraw = -1;
+            boardModel.reset = 1;
+            boardView.invalidate();
+        }
+        //SIZE UP BUTTON
+        if(i > boardModel.gridSize) {
+            boardModel.reDraw = 1;
+            boardModel.reset = 1;
+            boardView.invalidate();
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 }
