@@ -17,19 +17,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:fontFamily="serif-monospace"
+            android:fontFamily="casual"
             android:gravity="center"
             android:text="15 Squares Puzzle"
             android:textAlignment="center"
-            android:textSize="35dp" />
+            android:textSize="75dp"
+            android:layout_margin="10dp"
+            android:textColor="@color/white"/>
 
-        <Button
-            android:id="@+id/cheatButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:visibility="invisible"
-            android:text="Button" />
 
         <com.example.a15squares.BoardView
             android:id="@+id/boardView"
